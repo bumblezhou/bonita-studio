@@ -271,6 +271,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
         final MainProcessEditPart part = modelExporter.getMainProcessEditPart();
         final MainProcess mainProcess = modelExporter.getDiagram();
 
+        initializeDocumentRoot();
+
         definitions = ModelFactory.eINSTANCE.createTDefinitions();
         definitions.setExpressionLanguage("http://groovy.codehaus.org/");
         collaboration = ModelFactory.eINSTANCE.createTCollaboration();
@@ -290,6 +292,8 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         /* Handle Bonita connector */
         destBpmnFile = destFile;
+
+        configureNamespaces();
         //handleBonitaConnectorDefinition(destFile.getParentFile());
         //NO more sense? will create one xsd file on the fly for each required bpmn2 file
 
@@ -303,7 +307,7 @@ public class BonitaToBPMN implements IBonitaTransformer {
 
         populateWithSignals(definitions);
 
-        initializeDocumentRoot();
+
 
         root.setDefinitions(definitions);
         final ResourceSet resourceSet = new ResourceSetImpl();
@@ -325,13 +329,16 @@ public class BonitaToBPMN implements IBonitaTransformer {
         return true;
     }
 
-    protected void initializeDocumentRoot() {
-        root = ModelFactory.eINSTANCE.createDocumentRoot();
+    protected void configureNamespaces() {
         root.getXMLNSPrefixMap().put(JAVA_XMLNS, "http://jcp.org/en/jsr/detail?id=270");
         root.getXMLNSPrefixMap().put(XMLNS_HTTP_BONITASOFT_COM_BONITA_CONNECTOR_DEFINITION, "http://www.bonitasoft.org/studio/connector/definition/6.0");
         /* Two lines only for Bruce validation tools conformance... but it currently doesn't work either... */
         root.getXMLNSPrefixMap().put("xsi", "http://www.w3.org/2001/XMLSchema-instance");
         root.getXSISchemaLocation().put("schemaLocation", "http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd");//http://www.omg.org/spec/BPMN/20100501/BPMN20.xsd
+    }
+
+    protected void initializeDocumentRoot() {
+        root = ModelFactory.eINSTANCE.createDocumentRoot();
     }
 
     protected void populateWithMessageFlow(final MainProcess mainProcess) {
