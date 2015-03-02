@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bonitasoft.studio.businessobject.core.repository.BusinessObjectModelRepositoryStore;
 import org.bonitasoft.studio.common.NamingUtils;
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
 import org.bonitasoft.studio.common.log.BonitaStudioLog;
 import org.bonitasoft.studio.common.repository.Repository;
+import org.bonitasoft.studio.common.repository.RepositoryManager;
 import org.bonitasoft.studio.data.provider.DataExpressionProvider;
 import org.bonitasoft.studio.diagram.form.custom.commands.CreateFormCommand;
 import org.bonitasoft.studio.diagram.form.custom.model.WidgetMapping;
@@ -69,10 +71,15 @@ public class SelectFormWizard extends Wizard {
     }
 
     protected SelectGeneratedWidgetsWizardPage createSelectGeneratedWidgetsWizardPage(final String defaultFormName, final List<EObject> inputElements) {
-        final SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(defaultFormName,inputElements);
+        final SelectGeneratedWidgetsWizardPage page = new SelectGeneratedWidgetsWizardPage(pageFlow, defaultFormName, inputElements,
+                getBusinessObjectRepositoryStore());
         page.setTitle(Messages.createForm_title);
         page.setDescription(Messages.createForm_desc);
         return page;
+    }
+
+    protected BusinessObjectModelRepositoryStore getBusinessObjectRepositoryStore() {
+        return RepositoryManager.getInstance().getRepositoryStore(BusinessObjectModelRepositoryStore.class);
     }
 
     protected List<EObject> getAccessibleModelElements() {
@@ -154,7 +161,7 @@ public class SelectFormWizard extends Wizard {
             BonitaStudioLog.error(e);
         }
         final Form createdForm = (Form) createFormCmd.getCommandResult().getReturnValue();
-        FormsUtils.createDiagram(createdForm, editingDomain, pageFlow);
+        FormsUtils.createFormDiagram(createdForm, editingDomain);
         return FormsUtils.openDiagram(createdForm, editingDomain) != null;
     }
 
