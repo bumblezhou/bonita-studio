@@ -16,6 +16,7 @@ package org.bonitasoft.studio.pagedesigner.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.bonitasoft.studio.pagedesigner.core.resources.form.FormContextResource;
 import org.bonitasoft.studio.pagedesigner.core.resources.lock.WorkspaceServerResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,12 +45,13 @@ public class WorkspaceApplicationTest {
 
         assertThat(inboundRoot).isNotNull();
         assertThat(inboundRoot.getRoutes()).hasSize(2);
-        final TemplateRoute route2 = (TemplateRoute) inboundRoot.getRoutes().get(1);
-        assertThat(route2.getTemplate().getPattern()).isEqualTo("/workspace/form/{formId}/context");
-        assertThat(((Finder) route2.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
         final TemplateRoute route1 = (TemplateRoute) inboundRoot.getRoutes().get(0);
-        assertThat(route1.getTemplate().getPattern()).isEqualTo("/workspace/{filePath}/{action}");
-        assertThat(((Finder) route1.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
+        assertThat(route1.getTemplate().getPattern()).isEqualTo("/workspace/form/{formId}/context");
+        assertThat(((Finder) route1.getNext()).getTargetClass()).isEqualTo(FormContextResource.class);
+        assertThat(((Finder) route1.getNext()).getClass()).isEqualTo(FormContextApplicationFinder.class);
+        final TemplateRoute route2 = (TemplateRoute) inboundRoot.getRoutes().get(1);
+        assertThat(route2.getTemplate().getPattern()).isEqualTo("/workspace/{filePath}/{action}");
+        assertThat(((Finder) route2.getNext()).getTargetClass()).isEqualTo(WorkspaceServerResource.class);
 
         //        final TemplateRoute route2 = (TemplateRoute) inboundRoot.getRoutes().get(1);
         //        assertThat(route2.getTemplate().getPattern()).isEqualTo("/workspace/{action}");

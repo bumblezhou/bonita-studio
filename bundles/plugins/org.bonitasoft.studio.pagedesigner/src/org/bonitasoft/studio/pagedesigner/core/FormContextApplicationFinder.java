@@ -28,4 +28,9 @@ public class FormContextApplicationFinder extends Finder {
         return new FormContextResource();
     }
 
+    @Override
+    public Class<? extends ServerResource> getTargetClass() {
+        return FormContextResource.class;
+    }
+
 }
