@@ -15,6 +15,7 @@
 package org.bonitasoft.studio.pagedesigner.core.resources.form;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.bonitasoft.studio.common.emf.tools.ModelHelper;
@@ -69,12 +70,12 @@ public class FormContextResource extends ServerResource {
     }
 
     private List<BusinessObjectData> getContext(final AbstractPageFlow pageFlow, final String formId) {
-        final List<BusinessObjectData> res = new ArrayList<BusinessObjectData>();
-        if (pageFlow instanceof Pool) {
-            if (isFormMappingMatchingId(formId, ((PageFlow) pageFlow).getFormMapping())) {
-                return res;
-            }
+        if (pageFlow instanceof Pool
+                && isFormMappingMatchingId(formId, ((PageFlow) pageFlow).getFormMapping())) {
+            //Process Instanciation Form have no access to context
+            return Collections.emptyList();
         }
+        final List<BusinessObjectData> res = new ArrayList<BusinessObjectData>();
         final Pool parentPool = ModelHelper.getParentPool(pageFlow);
         for (final Data data : parentPool.getData()) {
             if (data instanceof BusinessObjectData) {
