@@ -128,4 +128,25 @@ public class FormContextResourceTest extends RestletTest {
         assertThat(response.getEntityAsText()).isEqualTo("{\"businessObjectName\":{\"kind\":\"BusinessData\"}}");
     }
 
+    @Test
+    public void testGetFormContextWithSeveralBusinessData() {
+        final List<AbstractProcess> processes = new ArrayList<AbstractProcess>();
+        final AbstractProcess pool = PoolBuilder.aPool()
+                .havingOverviewFormMapping(FormMappingBuilder.aFormMapping()
+                        .havingTargetForm(ExpressionBuilder.aConstantExpression().withContent(FORMID)))
+                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName1").withEClassName("EClassNameSample"))
+                .havingData(JavaObjectDataBuilder.aData().havingDataType(JavaDataTypeBuilder.create().withName("java.util.List")))
+                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName2").withEClassName("EClassNameSample"))
+                .build();
+        processes.add(pool);
+        pool.getOverviewFormMapping().setTargetForm(ExpressionHelper.createFormReferenceExpression("useless", FORMID));
+        doReturn(processes).when(formContextResource).getAllProcesses();
+
+        final Response response = request("/workspace/form/" + FORMID + "/context").get();
+        assertThat(response.getStatus()).isEqualTo(Status.SUCCESS_OK);
+        assertThat(response.getEntityAsText())
+                .isEqualTo(
+                        "{\"businessObjectName1\":{\"dataType\":\"EClassNameSample\",\"kind\":\"BusinessData\"},\"businessObjectName2\":{\"dataType\":\"EClassNameSample\",\"kind\":\"BusinessData\"}}");
+    }
+
 }
