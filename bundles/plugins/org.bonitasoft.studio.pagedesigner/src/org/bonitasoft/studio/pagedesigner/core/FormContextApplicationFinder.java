@@ -1,6 +1,6 @@
 /**
- * Copyright (C) 2014 BonitaSoft S.A.
- * BonitaSoft, 32 rue Gustave Eiffel - 38000 Grenoble
+ * Copyright (C) 2015 Bonitasoft S.A.
+ * Bonitasoft, 32 rue Gustave Eiffel - 38000 Grenoble
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2.0 of the License, or
@@ -12,11 +12,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.resources;
+package org.bonitasoft.studio.pagedesigner.core;
 
-/**
- * @author Romain Bioteau
- */
-public enum WorkspaceAPIEvent {
-    PRE_OPEN, POST_OPEN, POST_CLOSE, PRE_CLOSE, PRE_DELETE, POST_DELETE, PRE_SAVE, POST_SAVE, POST_IMPORT, PRE_IMPORT
+import org.bonitasoft.studio.pagedesigner.core.resources.form.FormContextResource;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.resource.Finder;
+import org.restlet.resource.ServerResource;
+
+
+public class FormContextApplicationFinder extends Finder {
+
+    @Override
+    public ServerResource find(final Request request, final Response response) {
+        return new FormContextResource();
+    }
+
 }

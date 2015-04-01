@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.resources;
+package org.bonitasoft.studio.pagedesigner.core.resources.lock;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -41,7 +41,7 @@ import org.restlet.resource.ServerResource;
 public class WorkspaceServerResource extends ServerResource {
 
     public static final String ACTION_ATTRIBUTE = "action";
-    protected static final String FILEPATH_ATTRIBUTE = "filePath";
+    public static final String FILEPATH_ATTRIBUTE = "filePath";
     protected static final String GET_LOCK_STATUS = "lockStatus";
 
     private String action;

@@ -14,17 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.bonitasoft.studio.pagedesigner.core.resources;
+package org.bonitasoft.studio.pagedesigner.core.resources.lock;
 
 
 /**
  * @author Romain Bioteau
  *
  */
-public class ResourceNotFoundException extends Exception {
-
-    public ResourceNotFoundException(String filePath) {
-       super(filePath);
-    }
+public enum LockStatus {
+    LOCKED_BY_ME, LOCKED_BY_OTHER, UNLOCKED
 
 }

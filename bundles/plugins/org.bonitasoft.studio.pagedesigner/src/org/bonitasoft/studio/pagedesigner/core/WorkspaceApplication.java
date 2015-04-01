@@ -14,7 +14,8 @@
  */
 package org.bonitasoft.studio.pagedesigner.core;
 
-import org.bonitasoft.studio.pagedesigner.core.resources.WorkspaceServerResource;
+import org.bonitasoft.studio.pagedesigner.core.resources.form.FormContextResource;
+import org.bonitasoft.studio.pagedesigner.core.resources.lock.WorkspaceServerResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -24,13 +25,20 @@ import org.restlet.routing.Router;
  */
 public class WorkspaceApplication extends Application {
 
+    private final FormContextApplicationFinder finder;
+
+    public WorkspaceApplication(final FormContextApplicationFinder finder) {
+        this.finder = finder;
+    }
+
     @Override
     public Restlet createInboundRoot() {
         final Router router = new Router(getContext());
+        router.attach("/workspace/form/{" + FormContextResource.ATTR_FORMID + "}/context", finder);
         router.attach(
-                "/workspace/{filePath}/{action}",
+                "/workspace/{" + WorkspaceServerResource.FILEPATH_ATTRIBUTE + "}/{" + WorkspaceServerResource.ACTION_ATTRIBUTE + "}",
                 WorkspaceServerResource.class);
-        router.attach("/workspace/{action}", WorkspaceServerResource.class);
+        //router.attach("/workspace/{action}", WorkspaceServerResource.class); seems not handled
         return router;
     }
 
