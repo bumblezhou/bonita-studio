@@ -46,4 +46,14 @@ public class BotDataPropertySection extends BotBase {
         bot.button(IDialogConstants.OK_LABEL).click();
         return this;
     }
+
+    /**
+     * Be cautious it is available only on Process selection
+     *
+     * @return
+     */
+    public BotAddBusinessDataWizardPage addBusinessData() {
+        bot.button(Messages.addData, 1).click();
+        return new BotAddBusinessDataWizardPage(bot);
+    }
 }
