@@ -73,7 +73,7 @@ public class FormContextResourceTest extends RestletTest {
         final Response response = request("/workspace/form/plop/context").get();
 
         assertThat(response.getStatus()).isEqualTo(Status.CLIENT_ERROR_NOT_FOUND);
-        assertThat(response.getEntityAsText()).contains("The form with id myFormIdis not mapped.");
+        assertThat(response.getEntityAsText()).contains("No mapping found for the form with id " + FORMID);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class FormContextResourceTest extends RestletTest {
         final AbstractProcess pool = PoolBuilder.aPool()
                 .havingOverviewFormMapping(FormMappingBuilder.aFormMapping()
                         .havingTargetForm(ExpressionBuilder.aConstantExpression().withContent(FORMID)))
-                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName").withEClassName("EClassNameSample"))
+                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName").withClassname("EClassNameSample"))
                 .havingData(JavaObjectDataBuilder.aData().havingDataType(JavaDataTypeBuilder.create().withName("java.util.List")))
                 .build();
         processes.add(pool);
@@ -91,7 +91,7 @@ public class FormContextResourceTest extends RestletTest {
 
         final Response response = request("/workspace/form/" + FORMID + "/context").get();
         assertThat(response.getStatus()).isEqualTo(Status.SUCCESS_OK);
-        assertThat(response.getEntityAsText()).isEqualTo("{\"businessObjectName\":{\"dataType\":\"EClassNameSample\",\"kind\":\"BusinessData\"}}");
+        assertThat(response.getEntityAsText()).isEqualTo("{\"businessObjectName\":{\"className\":\"EClassNameSample\",\"type\":\"BusinessData\"}}");
     }
 
     @Test
@@ -125,7 +125,7 @@ public class FormContextResourceTest extends RestletTest {
 
         final Response response = request("/workspace/form/" + FORMID + "/context").get();
         assertThat(response.getStatus()).isEqualTo(Status.SUCCESS_OK);
-        assertThat(response.getEntityAsText()).isEqualTo("{\"businessObjectName\":{\"kind\":\"BusinessData\"}}");
+        assertThat(response.getEntityAsText()).isEqualTo("{\"businessObjectName\":{\"type\":\"BusinessData\"}}");
     }
 
     @Test
@@ -134,9 +134,9 @@ public class FormContextResourceTest extends RestletTest {
         final AbstractProcess pool = PoolBuilder.aPool()
                 .havingOverviewFormMapping(FormMappingBuilder.aFormMapping()
                         .havingTargetForm(ExpressionBuilder.aConstantExpression().withContent(FORMID)))
-                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName1").withEClassName("EClassNameSample"))
+                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName1").withClassname("EClassNameSample"))
                 .havingData(JavaObjectDataBuilder.aData().havingDataType(JavaDataTypeBuilder.create().withName("java.util.List")))
-                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName2").withEClassName("EClassNameSample"))
+                .havingData(BusinessObjectDataBuilder.createBusinessObjectDataBuilder().withName("businessObjectName2").withClassname("EClassNameSample"))
                 .build();
         processes.add(pool);
         pool.getOverviewFormMapping().setTargetForm(ExpressionHelper.createFormReferenceExpression("useless", FORMID));
@@ -146,7 +146,7 @@ public class FormContextResourceTest extends RestletTest {
         assertThat(response.getStatus()).isEqualTo(Status.SUCCESS_OK);
         assertThat(response.getEntityAsText())
                 .isEqualTo(
-                        "{\"businessObjectName1\":{\"dataType\":\"EClassNameSample\",\"kind\":\"BusinessData\"},\"businessObjectName2\":{\"dataType\":\"EClassNameSample\",\"kind\":\"BusinessData\"}}");
+                        "{\"businessObjectName1\":{\"className\":\"EClassNameSample\",\"type\":\"BusinessData\"},\"businessObjectName2\":{\"className\":\"EClassNameSample\",\"type\":\"BusinessData\"}}");
     }
 
 }

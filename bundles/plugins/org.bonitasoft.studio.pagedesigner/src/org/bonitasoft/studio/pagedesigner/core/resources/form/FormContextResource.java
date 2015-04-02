@@ -43,8 +43,8 @@ import org.restlet.resource.ServerResource;
 public class FormContextResource extends ServerResource {
 
     private static final String KIND_BUSINESS_DATA = "BusinessData";
-    private static final String KEY_DATA_TYPE = "dataType";
-    private static final String KEY_KIND = "kind";
+    private static final String KEY_CLASSNAME = "className";
+    private static final String KEY_TYPE = "type";
     public static final String ATTR_FORMID = "formId";
 
     @Get("json")
@@ -52,7 +52,7 @@ public class FormContextResource extends ServerResource {
         final String formId = getAttribute(ATTR_FORMID);
         final AbstractPageFlow pageFlow = findPageFlowMappingTo(formId);
         if (pageFlow == null) {
-            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "The form with id " + formId + "is not mapped.");
+            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "No mapping found for the form with id " + formId);
         }
         final List<BusinessObjectData> context = getContext(pageFlow, formId);
         return transfromToReadableJson(context);
@@ -62,8 +62,8 @@ public class FormContextResource extends ServerResource {
         final JSONObject json = new JSONObject();
         for (final BusinessObjectData businessObjectData : context) {
             final JSONObject businObjectJSOn = new JSONObject();
-            businObjectJSOn.put(KEY_KIND, KIND_BUSINESS_DATA);
-            businObjectJSOn.put(KEY_DATA_TYPE, businessObjectData.getEClassName());
+            businObjectJSOn.put(KEY_TYPE, KIND_BUSINESS_DATA);
+            businObjectJSOn.put(KEY_CLASSNAME, businessObjectData.getClassName());
             json.put(businessObjectData.getName(), businObjectJSOn);
         }
         return json;
